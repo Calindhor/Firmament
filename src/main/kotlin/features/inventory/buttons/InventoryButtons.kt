@@ -16,6 +16,7 @@ import moe.nea.firmament.util.MC
 import moe.nea.firmament.util.ScreenUtil
 import moe.nea.firmament.util.TimeMark
 import moe.nea.firmament.util.accessors.getProperRectangle
+import moe.nea.firmament.util.customgui.customGui
 import moe.nea.firmament.util.data.Config
 import moe.nea.firmament.util.data.DataHolder
 import moe.nea.firmament.util.data.ManagedConfig
@@ -45,7 +46,14 @@ object InventoryButtons {
 		if (FirmamentAPIImpl.extensions.any { it.shouldHideInventoryButtons(screen) }) {
 			return emptySequence()
 		}
-		return DConfig.data.buttons.asSequence().filter(InventoryButton::isValid)
+		val buttons = DConfig.data.buttons.asSequence().filter(InventoryButton::isValid)
+		val customGuiBounds = screen.customGui?.getBounds() ?: return buttons
+		// Never show or click a button that would sit on top of a custom GUI (like the storage overlay)
+		val screenRect = screen.getProperRectangle()
+		return buttons.filter { button ->
+			val buttonBounds = button.getBounds(screenRect)
+			customGuiBounds.none { it.intersects(buttonBounds) }
+		}
 	}
 
 

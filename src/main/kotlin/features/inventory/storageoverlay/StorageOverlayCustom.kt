@@ -30,6 +30,15 @@ class StorageOverlayCustom(
 		return overview.getBounds()
 	}
 
+	override fun getScreenRectangle(): Rectangle {
+		return Rectangle(
+			overview.measurements.x,
+			overview.measurements.y,
+			overview.measurements.totalWidth,
+			overview.measurements.totalHeight,
+		)
+	}
+
 	override fun afterSlotRender(context: GuiGraphicsExtractor, slot: Slot) {
 		if (slot.container !is Inventory)
 			context.disableScissor()

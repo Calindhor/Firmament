@@ -13,6 +13,13 @@ abstract class CustomGui {
 
 	abstract fun getBounds(): List<Rectangle>
 
+	/**
+	 * The rectangle that other features (e.g. inventory buttons) should treat as the screen's main area.
+	 * Return null to use the vanilla `x`/`y`/`imageWidth`/`imageHeight` of the screen.
+	 * This exists because `imageWidth` and `imageHeight` can no longer be changed after construction (26.1+).
+	 */
+	open fun getScreenRectangle(): Rectangle? = null
+
 	open fun moveSlot(slot: Slot) {
 		// TODO: return a Pair maybe? worth an investigation
 	}
